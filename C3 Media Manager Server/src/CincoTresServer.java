@@ -1,10 +1,13 @@
 import java.net.*;
+import java.text.*;
+import java.util.Date;
 import java.io.*;
 
 public class CincoTresServer 
 {
 	final static int MAX_CLIENTS = 1;
 	private static ClientHandler[] clientArray = new ClientHandler[MAX_CLIENTS];
+	private static FileWriter logWriter;
 	
     //Cinco Tres Server Main method
     public static void main(String[] args) throws IOException
@@ -13,36 +16,58 @@ public class CincoTresServer
         boolean sessionActive = true;			//Is the session active
         ServerSocket serverSocket = new ServerSocket(portNumber);	//Server Socket is a binding of IP address and Port Number
         Socket clientSocket;		//Client Socket is binding of client IP and Port
-                
-        int i = 0;					//Counter for the number of currently connected clients				
+            
+        logWriter = new FileWriter("SessionLog.txt");	//Log writer for session log using a file writer
+        Date date;										//Date will be initialized after a client connects, with the current time/date
+        SimpleDateFormat dateForm = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");	//Format for the date. d = day, M = month, y = year, H = hour, m = minutes, s= seconds
         
+        int id = 0;					//Counter for the number of currently connected clients				
         while(sessionActive)		//Loop while the session is active
         {
         	clientSocket = serverSocket.accept();			//When a client requests to connect, accept.
-        	System.out.println("Client request accepted");	//Log connection
+        	//System.out.println("Client request accepted");	//Log connection
+        	date = new Date();
+        	//Log Connection in log file
+        	logWriter.write("Client Request Accepted from: " + clientSocket.getInetAddress().getHostAddress() + " at: " + dateForm.format(date) + " ID assigned: " + id);
+        	logWriter.flush();
         	
-        	PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);	//Output to client
-            	BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        	PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);	//Output to client. PrintWriter by default uses TCP, so data delivery is reliable
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             
-        	System.out.println("Creating new Client Handler");
-        	ClientHandler clientHandler = new ClientHandler(i, out, in, clientSocket);
+        	ClientHandler clientHandler = new ClientHandler(id, out, in, clientSocket);
         	
         	Thread t = new Thread(clientHandler);
-        	System.out.println("Adding client to list of handled clients");
         	
-        	if(i < MAX_CLIENTS)
+        	if(id < MAX_CLIENTS)
         	{
-        		clientArray[i] = clientHandler;
-        		i++;
+        		clientArray[id] = clientHandler;
+        		id++;
         		t.start();
         	}
         	else
         	{
-            	System.out.println("Maximum number of clients being handled");
+            	//System.out.println("Maximum number of clients being handled");
+            	logWriter.write("Maximum number of clients reached " + clientSocket.getInetAddress().getHostAddress() + " at: " + dateForm.format(new Date()));
+            	logWriter.flush();
         	}
         	
         }
         serverSocket.close();
+        sessionActive = false;
+    }
+    
+    public static void writeToLog(String logEntry)
+    {
+    	try
+    	{
+			logWriter.write(logEntry);
+			logWriter.flush();
+		} 
+    	catch (IOException e) 
+    	{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
 
@@ -64,38 +89,59 @@ public class CincoTresServer
     		this.s = s;
     		this.sessionActive = true;
     		
-    		dbA = new DatabaseAccessor();
+    		dbA = new DatabaseAccessor("media");
     	}
 	
     	@Override
     	public void run()
     	{
-    		String input, output;
+    		String input, output, command;
 		
     		CincoTresProtocol ctp = new CincoTresProtocol();
 
-            output = ctp.processInput("&");
-            out.println(output);			
+            //command = ctp.processInput("&");
+          //  out.println(command);			
             
     		while(sessionActive)
     		{
     			try
     			{
-    				input = in.readLine();
-    				output = ctp.processInput(input);
+    				input = in.readLine();				//Incoming String
+    				command = ctp.processInput(input);	//Command String returned by processInput(). ctp instance processes input and issues a command which CincoTresServer executes
+					output = "";
 					
-					if(output.equals("Book"))
+					if(command.equals("Book"))
 					{
-						System.out.println(dbA.getBook());
-						output = dbA.getBook();
+						//System.out.println(dbA.getNextBook());
+						
+						output = dbA.getNextBook();
+						
+						//System.out.println(dbA.getNextBook());
+						//output = dbA.getNextBook();
+						
+						//System.out.println(dbA.getNextBook());
+						//output = dbA.getNextBook();
+					}
+					else if(command.equals("verified"))
+					{
+						CincoTresServer.writeToLog("\nClient: " + clientID + " login verified");
+						output = "verified";
+					}
+					else if(command.equals("quit"))
+					{
+						sessionActive = false;
+					}
+					else
+					{
+						output = command;
 					}
 					
-					System.out.println("Found outout ptinting: "+ output);
 					out.println(output);
     			}
     			catch (IOException e)
     			{
     				System.out.println("IO Exception encountered in Client Handler");
+    				sessionActive = false;
     			}
     		}
     		try
@@ -104,6 +150,7 @@ public class CincoTresServer
     			this.in.close();
     			this.out.close();
     			this.s.close();
+    			sessionActive = false;
     		}
     		catch(IOException e)
     		{
@@ -111,4 +158,3 @@ public class CincoTresServer
     		}
     	}
     }
-

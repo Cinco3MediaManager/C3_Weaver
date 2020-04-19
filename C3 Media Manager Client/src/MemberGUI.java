@@ -5,6 +5,11 @@ public class MemberGUI extends JFrame
 {
 	Color gray2 = new Color(105,105,105);
 	
+	private int ribbonSizeBook = 3;
+	private int ribbonSizeMusic = 3;
+	private int ribbonSizeMovie = 3;
+
+	
 	public MemberGUI()
 	{	
 		JLabel label = new JLabel("Menu");
@@ -68,6 +73,8 @@ public class MemberGUI extends JFrame
 		holder.add(Box.createRigidArea(new Dimension(10,0)));
 		holder.add(field);
 		
+		populateMediaTiles();
+		
 		setBackground(Color.white);
 		setTitle("Library Catalog");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,5 +83,24 @@ public class MemberGUI extends JFrame
 		setVisible(true);
 		setSize(1125,1050);
 	}
+	
+	private void populateMediaTiles()
+	{
+		CincoTresClient.sendMessage("Book");
+		String bookString = CincoTresClient.readMessage();
+		
+		String[] fieldArray = bookString.split(";");
+		
+		for(int i = 0; i < ribbonSizeBook; i++)
+		{
+			//title, author, publisher, date, subject
+			Book testBook = new Book(fieldArray[0],fieldArray[1],fieldArray[2],fieldArray[3],fieldArray[4]);
+			testBook.printInfo();
+			
+			CincoTresClient.sendMessage("Book");
+			bookString = CincoTresClient.readMessage();
+			fieldArray = bookString.split(";");
+		}
+		
+	}
 }
-
