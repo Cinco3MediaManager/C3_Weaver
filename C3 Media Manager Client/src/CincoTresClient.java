@@ -14,7 +14,7 @@ public class CincoTresClient
         String hostName = "192.168.1.6";		//Replace with IP Address of localhost if needed
         int portNumber = 1234;					//make sure port matches one in server class
         
-     //  Socket s;								//IP and Port binding
+     //   Socket s;								//IP and Port binding
         PrintWriter out;						//Writer to server
         BufferedReader in;						//Reader from server
         
@@ -24,7 +24,7 @@ public class CincoTresClient
         try
         {
         	Socket s = new Socket(hostName, portNumber);	//Create Socket with IP and Port #s
-        	s2 = s;						//Copy to pass to the read/send methods
+        	s2 = s;
         	out = new PrintWriter(s.getOutputStream(), true);	//Create writer to server
         	in = new BufferedReader(new InputStreamReader(s.getInputStream()));	//Create reader from server
         	
@@ -36,18 +36,12 @@ public class CincoTresClient
         	String response = readMessage();
         	//End Handshake
         	
-		//Phase 2: Send & Read Pairs
         	//Next send triggered by LoginWindow (for now). Send/read should (normally) occur in pairs
         	response = readMessage();
         	if(response.equals("verified"))
         	{
         		launchMemberGUI();
         	}
-		else
-		{
-			//Notify user Password/Username is invalid, try again
-			//Can use something like JErrorBox
-		}
         }
 
       catch(IOException e)
@@ -60,7 +54,7 @@ public class CincoTresClient
     private void launchMemberGUI()
     {
     	gui = new MemberGUI();
-    	guiLaunched = true;	//No longer needed
+    	guiLaunched = true;
     }
     
     public static void sendMessage(String message)
@@ -70,7 +64,7 @@ public class CincoTresClient
     	try
     	{
 			PrintWriter toServer = new PrintWriter(s2.getOutputStream(),true);
-			System.out.println("sendMessage Called with: " + msg);	//For testing
+			System.out.println("sendMessage Called with: " + msg);
 			toServer.println(msg);
 		} 
     	catch (IOException e) 
@@ -90,7 +84,7 @@ public class CincoTresClient
     	{
 			BufferedReader in = new BufferedReader(new InputStreamReader(s2.getInputStream()));
         	message = in.readLine();
-        	System.out.println("In read message: " + message);	//For testing
+        	System.out.println("In read message: " + message);
 		} 
     	catch (IOException e)
     	{

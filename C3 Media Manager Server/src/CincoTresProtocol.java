@@ -19,9 +19,9 @@ public class CincoTresProtocol
     	{
     		char command = theInput.charAt(0);
    			
-   			if(command == '&')		// & is the prefix for client-server first exchange;
+   			if(command == '&')		// & is the prefix for client-server Handshake;
    			{
-   				theOutput = "Welcome to C3 Media Manager. This is the output console for the server.";	
+   				theOutput = "Welcome to C3 Media Manager. This is the handshake phase.\n";	
     		}
     	
     		if(command == '*')		// * is the prefix for username and password pairs; seperated by #. Ex: *username#password
@@ -44,9 +44,7 @@ public class CincoTresProtocol
     		if(theInput.contentEquals("quit"))
     		{
     			theOutput = "quit";
-    		}
-    			
-    		
+    		}	
     	}
     	
     	else

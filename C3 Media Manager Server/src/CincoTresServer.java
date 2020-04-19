@@ -97,10 +97,7 @@ public class CincoTresServer
     	{
     		String input, output, command;
 		
-    		CincoTresProtocol ctp = new CincoTresProtocol();
-
-            //command = ctp.processInput("&");
-          //  out.println(command);			
+    		CincoTresProtocol ctp = new CincoTresProtocol();	
             
     		while(sessionActive)
     		{

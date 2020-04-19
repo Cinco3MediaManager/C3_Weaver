@@ -58,7 +58,6 @@ public class DatabaseAccessor
 	            String field5 = rs.getString("Subject");		//Used with query1 for the name of an artist
 	            
 		        String concatString = field1 + "; " + field2 + "; " + field3 + "; " + field4 + "; " + field5;
-		        //System.out.println("Concatinating Book String: " + concatString);
 		        returnString = concatString;      
 		      } 
 		      catch (SQLException e ) 

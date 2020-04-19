@@ -27,6 +27,10 @@ public class CatalogViewPanel extends JPanel
 	private int numTilesY = 3;	//Number of tiles per column
 	private int padding = 25;	//Padding (in px) between tile and grid lines
 	
+	private int ribbonSizeBook = 3;
+	private int ribbonSizeMovie = 3;
+	private int ribbonSizeCD = 3;
+	
 	JLabel coverArt;
 	
 	public CatalogViewPanel()
@@ -38,6 +42,7 @@ public class CatalogViewPanel extends JPanel
 		tileHeight = (panelSizeY/numTilesY);
 		
 		populatePanel();
+		populateMediaTiles();
 		
 	}
 	public void paintComponent(Graphics g)
@@ -123,7 +128,59 @@ public class CatalogViewPanel extends JPanel
 		mediaTiles[8].paintComponent(g);
 		
 		mediaTiles[4].paintComponent(g);
-
+	}
+	
+	private void populateMediaTiles()
+	{
+		String bookString;
+		String[] fieldArray;
+		
+		//Populate the book ribbon
+		for(int i = 0; i < ribbonSizeBook; i++)
+		{
+			CincoTresClient.sendMessage("Book");
+			bookString = CincoTresClient.readMessage();
+			fieldArray = bookString.split(";");
+			
+			//title, author, publisher, date, subject
+			Book testBook = new Book(fieldArray[0],fieldArray[1],fieldArray[2],fieldArray[3],fieldArray[4]);
+			mediaTiles[i].assignBook(testBook);
+			
+			//For testing
+			testBook.printInfo();
+		}
+		
+		/*
+		//Populate the movie ribbon
+		for(int i = 0; i < ribbonSizeMovie; i++)
+		{
+			CincoTresClient.sendMessage("Movie");
+			bookString = CincoTresClient.readMessage();
+			fieldArray = bookString.split(";");
+			
+			Movie testMovie = new Book(fieldArray[0],fieldArray[1],fieldArray[2],fieldArray[3],fieldArray[4]);
+			mediaTiles[i].assignBook(testMovie);
+			
+			//For testing
+			testMovie.printInfo();
+		}
+		
+		//Populate the CD ribbon
+		for(int i = 0; i < ribbonSizeCD; i++)
+		{
+			CincoTresClient.sendMessage("Book");
+			bookString = CincoTresClient.readMessage();
+			fieldArray = bookString.split(";");
+			
+			CD testCD = new Book(fieldArray[0],fieldArray[1],fieldArray[2],fieldArray[3],fieldArray[4]);
+			mediaTiles[i].assignBook(testCD);
+			
+			//For testing
+			testCD.printInfo();
+		}
+		
+		*/
+		
 	}
 
 }

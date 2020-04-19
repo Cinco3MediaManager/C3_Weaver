@@ -73,7 +73,7 @@ public class MemberGUI extends JFrame
 		holder.add(Box.createRigidArea(new Dimension(10,0)));
 		holder.add(field);
 		
-		populateMediaTiles();
+		//populateMediaTiles();
 		
 		setBackground(Color.white);
 		setTitle("Library Catalog");
@@ -84,23 +84,4 @@ public class MemberGUI extends JFrame
 		setSize(1125,1050);
 	}
 	
-	private void populateMediaTiles()
-	{
-		CincoTresClient.sendMessage("Book");
-		String bookString = CincoTresClient.readMessage();
-		
-		String[] fieldArray = bookString.split(";");
-		
-		for(int i = 0; i < ribbonSizeBook; i++)
-		{
-			//title, author, publisher, date, subject
-			Book testBook = new Book(fieldArray[0],fieldArray[1],fieldArray[2],fieldArray[3],fieldArray[4]);
-			testBook.printInfo();
-			
-			CincoTresClient.sendMessage("Book");
-			bookString = CincoTresClient.readMessage();
-			fieldArray = bookString.split(";");
-		}
-		
-	}
 }
