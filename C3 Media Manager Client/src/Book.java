@@ -22,7 +22,7 @@ public class Book
 		publisher = "Default_Publisher";			
 	}
 	
-	public Book(String title, String author, String subject, String date, String publisher)
+	public Book(String title, String author, String publisher, String date, String subject)
 	{
 		this.title = title; 
 		this.author = author;
@@ -93,6 +93,16 @@ public class Book
 	{
 		return publisher;			
 	}
+	
+	public void printInfo()
+	{
+		System.out.println(toString());
+	}
+	
+	public String toString()
+	{
+		String bookString = "Title: " + title + "\nAuthor: " + author + "\nPublisher: " + publisher + "\nDate: " + date + "\nSubject: " + subject;
+		return bookString;
+	}
 
 }
-

@@ -23,6 +23,9 @@ public class LoginWindow extends JFrame
 	private JTextField passwordTextField;
 	
 	private boolean filledOut;
+	private boolean exitClicked;
+	
+	Thread waiting;
 		
 	public LoginWindow()
 	{	
@@ -32,6 +35,8 @@ public class LoginWindow extends JFrame
 		buttonPanel = new JPanel();
 		holder = new JPanel();
 		
+		exitClicked = false;
+		filledOut = false;
 
 		usernameTextField = new JTextField(20);
 		passwordTextField = new JTextField(20);
@@ -99,6 +104,11 @@ public class LoginWindow extends JFrame
 		return filledOut;
 	}
 	
+	public boolean isExitClicked()
+	{
+		return exitClicked;
+	}
+	
 	private class ButtonListener implements ActionListener
 	{
 		@Override
@@ -107,19 +117,17 @@ public class LoginWindow extends JFrame
 			if(e.getSource() == loginButton)
 			{
 				username = usernameTextField.getText();
-				password = passwordTextField.getText();
-				
-				filledOut = true;
-				
-				System.out.println("Username Entered: " + username);
-				System.out.println("Password Entered: " + password);
+				password = passwordTextField.getText();	
+				filledOut = true;	
+				String loginPair = "*" + username + "#" + password;		
+				CincoTresClient.sendMessage(loginPair);
 			}
 			
 			if(e.getSource() == exitButton)
 			{
 				dispose();
+				exitClicked = true;
 			}
 		}
 	}
 }
-

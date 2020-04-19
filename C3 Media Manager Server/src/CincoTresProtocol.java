@@ -1,3 +1,4 @@
+
 import java.net.*;
 import java.io.*;
 
@@ -20,7 +21,7 @@ public class CincoTresProtocol
    			
    			if(command == '&')		// & is the prefix for client-server first exchange;
    			{
-   				theOutput = "Welcome to C3 Media Manager. This is the output console for the server.";
+   				theOutput = "Welcome to C3 Media Manager. This is the output console for the server.";	
     		}
     	
     		if(command == '*')		// * is the prefix for username and password pairs; seperated by #. Ex: *username#password
@@ -40,16 +41,21 @@ public class CincoTresProtocol
     		{
     			theOutput = "Book";
     		}
+    		if(theInput.contentEquals("quit"))
+    		{
+    			theOutput = "quit";
+    		}
     			
     		
-    		}
+    	}
     	
-    		else
-    		{	
+    	else
+    	{	
    			theOutput = "";
-    		}
+    	}
 		
     	return theOutput; 	
     }
 }
+
 
