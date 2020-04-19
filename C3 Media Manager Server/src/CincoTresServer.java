@@ -111,16 +111,8 @@ public class CincoTresServer
 					output = "";
 					
 					if(command.equals("Book"))
-					{
-						//System.out.println(dbA.getNextBook());
-						
-						output = dbA.getNextBook();
-						
-						//System.out.println(dbA.getNextBook());
-						//output = dbA.getNextBook();
-						
-						//System.out.println(dbA.getNextBook());
-						//output = dbA.getNextBook();
+					{	
+						output = dbA.getNextBook();	
 					}
 					else if(command.equals("verified"))
 					{

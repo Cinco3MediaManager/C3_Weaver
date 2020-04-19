@@ -34,6 +34,7 @@ public class CincoTresClient
         	//Phase 1: Handshake
         	sendMessage("&1");
         	String response = readMessage();
+        	//End Handshake
         	
         	//Next send triggered by LoginWindow (for now). Send/read should (normally) occur in pairs
         	response = readMessage();
@@ -41,119 +42,7 @@ public class CincoTresClient
         	{
         		launchMemberGUI();
         	}
-        		
-        	//
-        
-
-        	Thread send = new Thread(new Runnable()			//Thread that handles sending items to server
-        	{
-        		@Override
-        		public void run()
-        		{ 
-        			boolean sent = false; 
-        			boolean sessionActive = true;
-        			while(sessionActive)
-        			{
-        				try 
-        				{
-        					String message = "";
-        					
-        					if(!log.isFilledOut())
-        					{
-        						try 
-        						{
-        							Thread.sleep(1000);
-
-        						}
-        						catch(InterruptedException e)
-        						{
-        							
-        						}
-        					}
-        					
-        					if(log.isFilledOut() && sent == false)
-        					{
-        						//String username = log.getUserName();
-        					//	String password = log.getPassword();
-        					//	String loginPair = "*" + username + "#" + password;
-        						
-        					//	System.out.println("Username and Password Pair: " + loginPair);
-        					//	message = loginPair;
-        						sent = true;
-        					}
-        					
-        					if(log.isExitClicked())
-        					{
-        						sessionActive = false;
-        						message = "quit";
-        					}
-        					
-        					out.println(message);
-        					out.flush();
-        				}
-        				finally
-        				{
-        					
-        				}
-        			}
-        			
-        		}
-        	});
-        
-        Thread read = new Thread(new Runnable()  
-        { 
-            @Override
-            public void run() 
-            { 
-            	boolean sessionActive = true;
-            	
-                while (sessionActive) 
-                { 
-                    try 
-                    { 
-                        // read the message sent to this client 
-                    	String message = in.readLine();
-                    	
-                    	if(message.equals("verified"))
-                		{
-                			if(guiLaunched == false)
-                			{
-                				//launchMemberGUI();
-                			}
-                		}
-                    	
-                    	else if(message.equals("quit"))
-                		{
-                			 sessionActive = false;
-                		}
-                    	else
-                    	{
-                    		System.out.println("Message Recieved from Server: " + message);
-                    	}
-                    } 
-                    catch (IOException e) 
-                    {
-                    	
-                    }
- 
-             }//End while
-                
-             try	    //Try to close connections
-             {
-            	 s.close();
-            	 in.close();
-            	 out.close();
-             }
-             catch (IOException e)
-             {
-            	 
-             }
-            } 
-        }); 		//End of Thread read
-        
-      // read.start();
-       //send.start();
-      }
+        }
 
       catch(IOException e)
       {
